@@ -49,6 +49,15 @@ async def test_empty_url_gives_none(monkeypatch):
 
 def test_no_paid_jev_call_anywhere():
     import pathlib
-    hits = [str(p) for p in pathlib.Path("backend").rglob("*.py")
-            if "api/alpha/decisions" in p.read_text()]
+    this_file = pathlib.Path(__file__).resolve()
+    backend_dir = this_file.parent.parent
+    hits = []
+    for p in backend_dir.rglob("*.py"):
+        if p.resolve() == this_file:
+            continue
+        if any(part.startswith(".") or part in ("venv", ".venv", "__pycache__", "site-packages") for part in p.parts):
+            continue
+        content = p.read_text(encoding="utf-8", errors="ignore")
+        if "api/alpha/decisions" in content:
+            hits.append(str(p.relative_to(backend_dir)))
     assert hits == []
