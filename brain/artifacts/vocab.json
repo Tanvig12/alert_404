@@ -1,0 +1,1 @@
+{"events": ["brute_force", "lateral_movement", "powershell_execution", "lsass_dump", "phishing_click", "privilege_escalation", "ransomware_encryption", "c2_beacon", "data_exfiltration", "valid_account_login", "external_exploit", "vpn_anomaly"], "unk_id": 12}

@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: soc-backend
+    env: docker
+    dockerfilePath: backend/Dockerfile
+    healthCheckPath: /readyz
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: CORRELATOR_URL
+        sync: false
+      - key: BRAIN_URL
+        value: ""
+      - key: JEFF_URL
+        value: ""
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        value: qwen/qwen3-next-80b-a3b-instruct:free
+      - key: DEMO_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: OLLAMA_URL
+        value: ""

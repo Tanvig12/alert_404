@@ -1,0 +1,33 @@
+[project]
+name = "soc-sentinel-backend"
+version = "0.1.0"
+description = "SOC Sentinel AI backend — FastAPI API/AI/MITRE/DB"
+requires-python = ">=3.12.7,<3.13"
+dependencies = [
+  "fastapi==0.115.12",
+  "uvicorn[standard]==0.34.2",
+  "pydantic==2.11.3",
+  "sqlalchemy[asyncio]==2.0.36",
+  "asyncpg==0.30.0",
+  "aiosqlite==0.20.0",
+  "alembic==1.14.1",
+  "pandas==2.2.3",
+  "scikit-learn==1.6.1",
+  "mitreattack-python==3.0.1",
+  "openai==1.99.0",
+  "httpx==0.28.1",
+  "tenacity==9.0.0",
+  "structlog==24.4.0",
+  "prometheus-fastapi-instrumentator==7.0.0",
+  "redis==5.2.0",
+  "faker==25.0",
+  "pytest==8.3.4",
+  "pytest-asyncio==0.26.0",
+  "httpx==0.28.1",
+  "ruff==0.8.0",
+  "python-multipart==0.0.20",
+  "psycopg2-binary==2.9.10",
+]
+
+[dependency-sources]
+torch = []

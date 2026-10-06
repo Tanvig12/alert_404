@@ -1,0 +1,11 @@
+service:
+  name: soc-correlator
+  type: web
+  dockerfile: correlator/Dockerfile
+  instance_type: free
+  ports:
+    - port: 8081
+      protocol: http
+  regions: [was]
+  healthcheck:
+    path: /healthz

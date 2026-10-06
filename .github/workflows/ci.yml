@@ -1,0 +1,38 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync --project backend
+      - run: uv run --project backend ruff check backend/app backend/tests
+      - run: uv run --project backend pytest backend/tests -q -p no:cacheprovider
+  brain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv run --python 3.12 --with pytest python -m pytest brain/tests -q -p no:cacheprovider
+  correlator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.89.0
+        with: { components: clippy }
+      - run: cargo clippy --manifest-path correlator/Cargo.toml -- -D warnings
+      - run: cargo test --manifest-path correlator/Cargo.toml
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+        working-directory: frontend
+      - run: bun run typecheck
+        working-directory: frontend
+      - run: bun run test
+        working-directory: frontend
+      - run: bun run build
+        working-directory: frontend
