@@ -1,24 +1,76 @@
 @import "tailwindcss";
 
 :root {
-  --soc-bg: #0f2429;
-  --soc-surface: #16333a;
-  --soc-surface-2: #1c4048;
-  --soc-border: #2c515a;
-  --soc-border-strong: #3d6a74;
-  --soc-ink: #e3ede6;
-  --soc-ink-dim: #9db3ab;
-  --soc-ink-faint: #647e77;
-  --soc-accent: #d9a441;
-  --soc-accent-ink: #20180a;
-  --soc-sev-p1: #e5484d;
-  --soc-sev-p2: #e8933c;
-  --soc-sev-p3: #c9b458;
-  --soc-sev-p4: #6e8b84;
-  --soc-ok: #57b894;
-  --soc-radius: 10px;
-  --soc-font-ui: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
-  --soc-font-mono: ui-monospace, "JetBrains Mono", SFMono-Regular, Menlo, monospace;
+  /* =========================================================================
+     Foundation Palette — Electric Obsidian Command Center
+     High-contrast dark obsidian with tactical amber, cyan, and signal rails
+     ========================================================================= */
+  --soc-bg: #070a0c;
+  --soc-surface: #0d1215;
+  --soc-surface-2: #141c20;
+  --soc-surface-3: #1b262d;
+  
+  --soc-border: #1e2c33;
+  --soc-border-strong: #2d424e;
+  --soc-border-subtle: #121a1f;
+  --soc-border-specular: rgba(255, 255, 255, 0.07);
+
+  --soc-ink: #f0f6f4;
+  --soc-ink-dim: #94a7a0;
+  --soc-ink-faint: #566862;
+
+  /* Functional Hues: >= 3 Distinct Tactical Hues */
+  --soc-accent: #f59e0b;       /* Electric Amber (Attention & Action) */
+  --soc-accent-ink: #170d02;
+  --soc-accent-glow: rgba(245, 158, 11, 0.28);
+  --soc-cyan: #06b6d4;         /* Telemetry & Network Graph */
+  --soc-cyan-glow: rgba(6, 182, 212, 0.25);
+  --soc-ok: #10b981;           /* Nominal / Normal Status */
+  --soc-ok-glow: rgba(16, 185, 129, 0.25);
+
+  /* Incident Severity Rails */
+  --soc-sev-p1: #ef4444;       /* Critical / Active Breach (Signal Red) */
+  --soc-sev-p2: #f97316;       /* High Risk (Industrial Orange) */
+  --soc-sev-p3: #eab308;       /* Medium Risk (Tactical Yellow) */
+  --soc-sev-p4: #64748b;       /* Informational (Slate) */
+
+  /* =========================================================================
+     Semantic Radius Cascade (Step-down 2-6px, Enterprise/Data grammar)
+     shell >= surface >= inset >= control >= tight
+     ========================================================================= */
+  --radius-shell: 16px;        /* Outer modals / full viewport cards */
+  --radius-surface: 12px;      /* Major bento panels, canvases, containers */
+  --radius-inset: 8px;         /* Nested metric plates, log tables, sub-panes */
+  --radius-control: 6px;       /* Buttons, inputs, search fields, segmented tabs */
+  --radius-tight: 4px;         /* Status chips, micro badges, indicators */
+  --radius-pill: 9999px;       /* Status dots, selective pills only */
+  
+  /* Backward-compatible alias for existing tests and components */
+  --soc-radius: var(--radius-surface);
+
+  /* =========================================================================
+     Motion Choreography Tokens
+     Zero "transition: all" — explicit properties and spring physics
+     ========================================================================= */
+  --motion-micro: 120ms;
+  --motion-state: 180ms;
+  --motion-panel: 280ms;
+  --motion-page: 420ms;
+
+  --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* =========================================================================
+     Typography Stacks
+     Display font for headings; Monospace for telemetry/IDs; Sans for body
+     ========================================================================= */
+  --font-display: "Space Grotesk", "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, Menlo, Monaco, monospace;
+  --font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  
+  --soc-font-ui: var(--font-body);
+  --soc-font-mono: var(--font-mono);
 }
 
 body {
@@ -26,8 +78,73 @@ body {
   color: var(--soc-ink);
   font-family: var(--soc-font-ui);
   font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* =========================================================================
+   Anti-Slop Craft: Film-Grain Noise & CRT Scanlines
+   ========================================================================= */
+.film-grain {
+  position: relative;
+}
+.film-grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.16) 2px,
+    rgba(0, 0, 0, 0.16) 4px
+  );
+}
+
+/* =========================================================================
+   Volumetric Container Depth (Layered Inset Borders + Specular Highlight)
+   ========================================================================= */
+.soc-card {
+  background: var(--soc-surface);
+  border: 1px solid var(--soc-border);
+  border-radius: var(--radius-surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 var(--soc-border-specular);
+  transition: border-color var(--motion-state) var(--ease-smooth), box-shadow var(--motion-state) var(--ease-smooth);
+}
+
+.soc-card:hover {
+  border-color: var(--soc-border-strong);
+}
+
+.soc-inset {
+  background: var(--soc-surface-2);
+  border: 1px solid var(--soc-border-subtle);
+  border-radius: var(--radius-inset);
+}
+
+/* Severity Indicator Left Rails */
+.soc-rail-p1 {
+  border-left: 3px solid var(--soc-sev-p1) !important;
+}
+.soc-rail-p2 {
+  border-left: 3px solid var(--soc-sev-p2) !important;
+}
+.soc-rail-p3 {
+  border-left: 3px solid var(--soc-sev-p3) !important;
+}
+.soc-rail-p4 {
+  border-left: 3px solid var(--soc-sev-p4) !important;
+}
+
+/* Tactical Data Table */
 table.soc {
   font-size: 13px;
   width: 100%;
@@ -36,48 +153,39 @@ table.soc {
 
 table.soc td,
 table.soc th {
-  padding: 6px 10px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--soc-border);
   text-align: left;
 }
 
 table.soc thead th {
   color: var(--soc-ink-dim);
+  font-size: 11px;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--soc-surface-2);
 }
 
 .font-mono-soc {
   font-family: var(--soc-font-mono);
+  font-feature-settings: "tnum" 1;
 }
 
-.soc-card {
-  background: var(--soc-surface);
-  border: 1px solid var(--soc-border);
-  border-radius: var(--soc-radius);
+.font-display-soc {
+  font-family: var(--font-display);
 }
 
-.soc-rail-p1 {
-  border-left: 3px solid var(--soc-sev-p1);
-}
-
-.soc-rail-p2 {
-  border-left: 3px solid var(--soc-sev-p2);
-}
-
-.soc-rail-p3 {
-  border-left: 3px solid var(--soc-sev-p3);
-}
-
-.soc-rail-p4 {
-  border-left: 3px solid var(--soc-sev-p4);
-}
-
+/* Badges with Strict Semantic Radius */
 .soc-badge {
-  display: inline-block;
-  border-radius: 6px;
-  padding: 1px 8px;
-  font-size: 12px;
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--radius-tight);
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   border: 1px solid var(--soc-border-strong);
   color: var(--soc-ink);
   background: var(--soc-surface-2);
@@ -85,43 +193,51 @@ table.soc thead th {
 
 .soc-badge-p1 {
   border-color: var(--soc-sev-p1);
-  background: color-mix(in srgb, var(--soc-sev-p1) 25%, var(--soc-surface));
+  background: color-mix(in srgb, var(--soc-sev-p1) 22%, var(--soc-surface));
+  color: #fecaca;
 }
 
 .soc-badge-p2 {
   border-color: var(--soc-sev-p2);
-  background: color-mix(in srgb, var(--soc-sev-p2) 25%, var(--soc-surface));
+  background: color-mix(in srgb, var(--soc-sev-p2) 22%, var(--soc-surface));
+  color: #fed7aa;
 }
 
 .soc-badge-p3 {
   border-color: var(--soc-sev-p3);
-  background: color-mix(in srgb, var(--soc-sev-p3) 25%, var(--soc-surface));
+  background: color-mix(in srgb, var(--soc-sev-p3) 22%, var(--soc-surface));
+  color: #fef08a;
 }
 
 .soc-badge-p4 {
   border-color: var(--soc-sev-p4);
-  background: color-mix(in srgb, var(--soc-sev-p4) 28%, var(--soc-surface));
+  background: color-mix(in srgb, var(--soc-sev-p4) 22%, var(--soc-surface));
+  color: #cbd5e1;
 }
 
 .soc-badge-ok {
   border-color: var(--soc-ok);
-  background: color-mix(in srgb, var(--soc-ok) 22%, var(--soc-surface));
+  background: color-mix(in srgb, var(--soc-ok) 20%, var(--soc-surface));
+  color: #a7f3d0;
 }
 
 .soc-badge-accent {
   border-color: var(--soc-accent);
-  background: color-mix(in srgb, var(--soc-accent) 22%, var(--soc-surface));
+  background: color-mix(in srgb, var(--soc-accent) 20%, var(--soc-surface));
+  color: #fde68a;
 }
 
 .soc-badge-dim {
-  border-color: var(--soc-border-strong);
+  border-color: var(--soc-border);
   background: var(--soc-surface-2);
+  color: var(--soc-ink-dim);
 }
 
+/* Motion: Subtle View Entry */
 @keyframes soc-rise {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -130,42 +246,51 @@ table.soc thead th {
 }
 
 .soc-reveal {
-  animation: soc-rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-timeline: view();
-  animation-range: entry 0% entry 35%;
+  animation: soc-rise var(--motion-panel) var(--ease-spring) both;
 }
 
 .soc-sticky {
   position: sticky;
   top: 0;
   z-index: 30;
-  backdrop-filter: blur(10px);
-  background: color-mix(in srgb, var(--soc-bg) 88%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: color-mix(in srgb, var(--soc-bg) 85%, transparent);
 }
 
+/* Focus Rings with Precise Contrast */
 :focus-visible {
   outline: 2px solid var(--soc-accent);
   outline-offset: 2px;
 }
 
+/* Tactical Scrollbars */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--soc-border-strong) transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 *::-webkit-scrollbar-thumb {
   background: var(--soc-border-strong);
-  border-radius: 4px;
+  border-radius: var(--radius-tight);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--soc-ink-faint);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .soc-reveal {
-    animation: none;
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
   }
 }
 
