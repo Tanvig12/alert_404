@@ -77,7 +77,7 @@ export function AttackGraph2D({
           return (
             <g key={n.id}>
               {n.choke && (
-                <circle cx={cx} cy={cy} r={15} fill="none" stroke="#E5484D" strokeWidth={1.5} />
+                <circle cx={cx} cy={cy} r={15} fill="none" stroke="#ef4444" strokeWidth={1.5} />
               )}
               <circle
                 cx={cx}

@@ -113,10 +113,10 @@ body {
    Volumetric Container Depth (Layered Inset Borders + Specular Highlight)
    ========================================================================= */
 .soc-card {
-  background: var(--soc-surface);
+  background: linear-gradient(180deg, var(--soc-surface-2) 0%, var(--soc-surface) 100%);
   border: 1px solid var(--soc-border);
   border-radius: var(--radius-surface);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 var(--soc-border-specular);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55), 0 12px 28px rgba(0, 0, 0, 0.35), inset 0 1px 0 var(--soc-border-specular);
   transition: border-color var(--motion-state) var(--ease-smooth), box-shadow var(--motion-state) var(--ease-smooth);
 }
 
@@ -125,9 +125,10 @@ body {
 }
 
 .soc-inset {
-  background: var(--soc-surface-2);
+  background: var(--soc-bg);
   border: 1px solid var(--soc-border-subtle);
   border-radius: var(--radius-inset);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
 }
 
 /* Severity Indicator Left Rails */
@@ -159,12 +160,13 @@ table.soc th {
 }
 
 table.soc thead th {
-  color: var(--soc-ink-dim);
+  color: var(--soc-accent);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: var(--soc-surface-2);
+  letter-spacing: 0.08em;
+  background: var(--soc-surface-3);
+  border-bottom: 1px solid var(--soc-border-strong);
 }
 
 .font-mono-soc {

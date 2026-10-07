@@ -17,24 +17,24 @@ export interface GraphEdge {
 }
 
 const NODE_COLORS: Record<GraphNode["kind"], string> = {
-  ip: "#6FC3C9",
-  user: "#D9A441",
-  host: "#7FA88F",
-  technique: "#E8C566",
+  ip: "#06b6d4",
+  user: "#f59e0b",
+  host: "#10b981",
+  technique: "#f97316",
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  open: "#E5484D",
-  acknowledged: "#E8933C",
-  escalated: "#E5484D",
-  false_positive: "#6E8B84",
+  open: "#ef4444",
+  acknowledged: "#f59e0b",
+  escalated: "#ef4444",
+  false_positive: "#64748b",
 };
 
 export function buildGraphModel(
   graph: { nodes: Array<{ id: string; kind: string; label: string; risk?: number; choke?: boolean }>; edges: Array<{ from: string; to: string; label: string }> },
   status = "open",
 ): { nodes: GraphNode[]; edges: GraphEdge[] } {
-  const edgeColor = STATUS_COLORS[status] ?? "#E5484D";
+  const edgeColor = STATUS_COLORS[status] ?? "#ef4444";
   const nodes: GraphNode[] = graph.nodes.map((n, i) => {
     const kind = (["ip", "user", "host", "technique"].includes(n.kind)
       ? n.kind : "host") as GraphNode["kind"];
@@ -47,7 +47,7 @@ export function buildGraphModel(
       label: n.label,
       risk: n.risk ?? 0,
       choke,
-      color: choke ? "#E5484D" : NODE_COLORS[kind],
+      color: choke ? "#ef4444" : NODE_COLORS[kind],
       position: [Math.cos(angle) * ring, ((i * 37) % 20) / 10 - 1, Math.sin(angle) * ring],
     };
   });

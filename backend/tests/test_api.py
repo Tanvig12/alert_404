@@ -83,6 +83,17 @@ async def test_upload_e2e(client):
     assert "triage_source_counts" in dash.json()
     assert (await client.get("/healthz")).json() == {"ok": True}
     assert (await client.get("/api/v1/handoff.md", headers=H)).status_code == 200
+    s = await client.get("/api/v1/handoff/summary", headers=H)
+    assert s.status_code == 200
+    sj = s.json()
+    for f in ("executive_summary", "now_watch", "next_shift_priorities",
+              "detection_gaps", "signoff_notes", "incident_count"):
+        assert f in sj, f
+    assert sj["provider"] == "rules"  # no key in test env
+    assert sj["fallback_used"] is True
+    # cached second view: identical payload, still one logical call
+    s2 = await client.get("/api/v1/handoff/summary", headers=H)
+    assert s2.json() == sj
 
 
 async def test_empty_batch_400(client):

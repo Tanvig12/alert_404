@@ -24,7 +24,7 @@ from backend.app.models import (Alert, AnalystAudit, Asset, Incident,
                                 IncidentAlert, SuppressionRule)
 from backend.app.schemas import (AlertIn, AnalyzeRequest, AnalystAction,
                                  AssetIn)
-from backend.app.services.ai_service import generate_brief
+from backend.app.services.ai_service import generate_brief, generate_shift_summary
 from backend.app.services.brain_client import brain_state, ensemble_anomaly
 from backend.app.services.correlator_client import correlate_via_rust
 from backend.app.services.correlation import correlate as mirror_correlate
@@ -754,6 +754,84 @@ async def handoff(db: AsyncSession = Depends(get_db),
     for a in audits:
         L.append(f"- {a.incident_id} {a.action} by {a.analyst_id}: {a.note}")
     return PlainTextResponse("\n".join(L) + "\n", media_type="text/markdown")
+
+
+_summary_cache: dict = {}
+
+
+def _queue_snapshot(rows, audits) -> dict:
+    """Aggregate the queue into one LLM-sized snapshot dict."""
+    by_sev: dict[str, int] = {}
+    by_status: dict[str, int] = {}
+    for r in rows:
+        by_sev[r.severity] = by_sev.get(r.severity, 0) + 1
+        by_status[r.status] = by_status.get(r.status, 0) + 1
+
+    def top(sevs: tuple[str, ...], n: int) -> list[dict]:
+        out = []
+        for r in rows:
+            if r.severity in sevs:
+                b = r.ai_brief or {}
+                out.append({
+                    "id": r.id, "asset_id": r.asset_id,
+                    "risk_score": r.risk_score, "status": r.status,
+                    "primary_technique": r.primary_technique,
+                    "headline": str(b.get("headline", ""))[:160],
+                    "triage": ((b.get("jev") or {}).get("disposition")
+                               if isinstance(b.get("jev"), dict) else None),
+                })
+                if len(out) >= n:
+                    break
+        return out
+
+    tech_counts = Counter(r.primary_technique for r in rows
+                          if r.primary_technique)
+    return {
+        "counts": {
+            "incidents": len(rows),
+            "open": by_status.get("open", 0),
+            "acknowledged": by_status.get("acknowledged", 0),
+            "escalated": by_status.get("escalated", 0),
+            "false_positive": by_status.get("false_positive", 0),
+            "P1_open": sum(1 for r in rows
+                           if r.severity == "P1" and r.status == "open"),
+            "P2_open": sum(1 for r in rows
+                           if r.severity == "P2" and r.status == "open"),
+        },
+        "top_p1": top(("P1",), 5),
+        "top_p2": top(("P2",), 3),
+        "technique_counts": dict(tech_counts.most_common(8)),
+        "uncovered_techniques": [],
+        "analyst_actions": [
+            {"incident_id": a.incident_id, "action": a.action,
+             "analyst_id": a.analyst_id, "note": a.note}
+            for a in audits[:10]
+        ],
+        "brain_state": brain_state(),
+    }
+
+
+@app.get("/api/v1/handoff/summary")
+async def handoff_summary(db: AsyncSession = Depends(get_db),
+                          _k: None = Depends(_key)) -> dict:
+    """Shift summary: one LLM call per queue state, cached otherwise."""
+    rows = (await db.execute(
+        select(Incident).order_by(Incident.risk_score.desc()))).scalars().all()
+    audits = (await db.execute(
+        select(AnalystAudit).order_by(
+            AnalystAudit.created_at.desc()).limit(20))).scalars().all()
+    # fingerprint = exact incident-ID set in risk order + audit count; any
+    # new analysis run or analyst action busts the cache honestly
+    fingerprint = ([r.id for r in rows],
+                   [(a.incident_id, a.action) for a in audits])
+    cached = _summary_cache.get("entry")
+    if cached and cached.get("fingerprint") == fingerprint:
+        return cached["summary"]
+    snapshot = _queue_snapshot(rows, audits)
+    summary = await generate_shift_summary(snapshot)
+    summary["incident_count"] = len(rows)
+    _summary_cache["entry"] = {"fingerprint": fingerprint, "summary": summary}
+    return summary
 
 
 @app.get("/api/v1/navigator")

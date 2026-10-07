@@ -47,8 +47,8 @@ export default function LandingHero3D() {
     const COUNT = 90;
     const pts = new Float32Array(COUNT * 3);
     const colors = new Float32Array(COUNT * 3);
-    const node = new THREE.Color("#6FC3C9");
-    const hub = new THREE.Color("#D9A441");
+    const node = new THREE.Color("#06b6d4");
+    const hub = new THREE.Color("#f59e0b");
     const tmp = new THREE.Color();
     for (let i = 0; i < COUNT; i++) {
       const r = 2.2 + rand() * 2.4;
@@ -83,7 +83,7 @@ export default function LandingHero3D() {
     const edgeGeo = new THREE.BufferGeometry();
     edgeGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(edgePts), 3));
     disposables.push(edgeGeo);
-    const edgeMat = new THREE.LineBasicMaterial({ color: "#2C515A", transparent: true, opacity: 0.8 });
+    const edgeMat = new THREE.LineBasicMaterial({ color: "#1e2c33", transparent: true, opacity: 0.8 });
     disposables.push(edgeMat);
     scene.add(new THREE.LineSegments(edgeGeo, edgeMat));
 

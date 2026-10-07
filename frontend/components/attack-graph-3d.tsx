@@ -37,7 +37,7 @@ function ChokePulse({ position }: { position: [number, number, number] }) {
   return (
     <mesh ref={ref} position={position}>
       <torusGeometry args={[0.45, 0.03, 8, 32]} />
-      <meshBasicMaterial color="#f87171" transparent opacity={0.8} />
+      <meshBasicMaterial color="#ef4444" transparent opacity={0.8} />
     </mesh>
   );
 }
@@ -101,7 +101,7 @@ function Scene({
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         </bufferGeometry>
-        <lineBasicMaterial color={model.edges[0]?.color ?? "#E5484D"} transparent opacity={0.7} />
+        <lineBasicMaterial color={model.edges[0]?.color ?? "#06b6d4"} transparent opacity={0.7} />
       </lineSegments>
       <ambientLight intensity={0.7} />
       <pointLight position={[5, 5, 5]} />
@@ -148,7 +148,7 @@ export function AttackGraph3D({
       <Canvas
         frameloop="demand"
         camera={{ position: [0, 4, 9] }}
-        style={{ height, background: "#0F2429" }}
+        style={{ height, background: "#070a0c" }}
         onPointerMissed={() => setSelected(null)}
       >
         <Scene graph={graph} status={status} onSelect={setSelected} />

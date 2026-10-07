@@ -21,14 +21,14 @@ describe("buildGraphModel", () => {
     expect(m.nodes).toHaveLength(4);
     expect(m.edges).toHaveLength(3);
     const choke = m.nodes.find((n) => n.choke);
-    expect(choke?.color).toBe("#E5484D");
-    expect(m.nodes.find((n) => n.kind === "ip")?.color).toBe("#6FC3C9");
-    expect(m.nodes.find((n) => n.kind === "user")?.color).toBe("#D9A441");
-    expect(m.edges[0].color).toBe("#E5484D");
+    expect(choke?.color).toBe("#ef4444");
+    expect(m.nodes.find((n) => n.kind === "ip")?.color).toBe("#06b6d4");
+    expect(m.nodes.find((n) => n.kind === "user")?.color).toBe("#f59e0b");
+    expect(m.edges[0].color).toBe("#ef4444");
   });
 
   it("uses mitigated edge color for false_positive", () => {
     const m = buildGraphModel(FIXTURE, "false_positive");
-    expect(m.edges[0].color).toBe("#6E8B84");
+    expect(m.edges[0].color).toBe("#64748b");
   });
 });

@@ -61,7 +61,7 @@ function NavLinks({ horizontal = false }: { horizontal?: boolean }) {
             className={
               horizontal
                 ? `flex min-h-[44px] min-w-[56px] flex-1 flex-col items-center justify-center gap-0.5 rounded-[var(--radius-control)] px-2 py-1.5 text-[11px] font-medium transition-[color,background-color] duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] ${active ? "bg-[var(--soc-surface-2)] text-[var(--soc-accent)]" : "text-[var(--soc-ink-dim)]"}`
-                : `flex items-center gap-2.5 rounded-[var(--radius-control)] px-3 py-2 text-sm font-medium transition-[color,background-color,border-color] duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] ${active ? "bg-[var(--soc-surface-2)] text-[var(--soc-accent)] shadow-[inset_0_1px_0_var(--soc-border-specular)]" : "text-[var(--soc-ink-dim)] hover:bg-[var(--soc-surface-2)] hover:text-[var(--soc-ink)]"}`
+                : `flex items-center gap-2.5 rounded-[var(--radius-control)] border px-3 py-2 text-sm font-medium transition-[color,background-color,border-color,box-shadow] duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] ${active ? "border-[var(--soc-accent)]/40 bg-[var(--soc-accent)]/12 text-[var(--soc-accent)] shadow-[0_0_12px_var(--soc-accent-glow),inset_0_1px_0_var(--soc-border-specular)]" : "border-transparent text-[var(--soc-ink-dim)] hover:bg-[var(--soc-surface-2)] hover:text-[var(--soc-ink)]"}`
             }
           >
             <Icon className={horizontal ? "h-5 w-5" : "h-4 w-4"} />
